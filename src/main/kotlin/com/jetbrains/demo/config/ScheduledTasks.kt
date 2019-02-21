@@ -29,16 +29,14 @@ import java.util.HashMap
  * Created by AlexHe on 2019-02-19.
  * Describe
  */
-
-@Component
 class ScheduledTasks {
 
-    @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(cron = "0 30/5 * * * *")
     fun subscription() {
         val df = DateTimeFormatter.ofPattern("HH:mm")
         var currentDateTime = LocalDateTime.now().plusHours(8)
         var localTime = df.format(currentDateTime)
-//        println(currentDateTime)
+        println(currentDateTime)
         println("現在時間$localTime")
         // Use the application default credentials
         var hasBeenInitialized = false
@@ -60,7 +58,7 @@ class ScheduledTasks {
         for (document in documents) {
             //localTime.equals(document.getString("time"))
             if (localTime.equals(document.getString("time"))) {
-                println("post time$currentDateTime")
+                println("一次post time$currentDateTime")
                 var restTemplate = RestTemplate()
                 var headers = HttpHeaders()
                 var type = MediaType.parseMediaType("application/json; charset=UTF-8")
@@ -69,11 +67,11 @@ class ScheduledTasks {
 
                 val requestJson = "{\"userId\":\"${document.getString("userId")}\",\n" +
                         "\t\"platform\":\"${document.getLong("platform")}\",\n" +
-                        "\t\"sysTime\":\"${localTime}\",\n" +
                         "\t\"city\":\"${document.getString("city")}\"}"
 
                 var entity = HttpEntity<String>(requestJson,headers)
                 var result = restTemplate.postForObject(url, entity, String::class.java)
+                println("一次post end!$currentDateTime")
                 println(result)
             }
         }
