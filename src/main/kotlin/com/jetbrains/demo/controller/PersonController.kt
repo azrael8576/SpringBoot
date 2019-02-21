@@ -17,8 +17,6 @@ import javax.validation.Valid
 @RequestMapping("/persons")
 class PersonController {
 
-
-
     //可以直接返回
     @GetMapping
     fun getAll(): Any = persons

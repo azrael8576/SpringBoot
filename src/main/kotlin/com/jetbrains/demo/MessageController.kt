@@ -16,8 +16,11 @@ import com.google.cloud.firestore.QueryDocumentSnapshot
 import com.google.cloud.firestore.QuerySnapshot
 import org.springframework.core.convert.TypeDescriptor.collection
 
+import com.jetbrains.demo.api.InitializeGCP
 
 
+
+/*
 
 data class Message(val text: String)
 
@@ -28,18 +31,20 @@ class MessageController {
 
         // Use the application default credentials
         var credentials = GoogleCredentials.getApplicationDefault()
-        val init =
+        val init = FirebaseApp.getInstance()
                 FirebaseApp.initializeApp(FirebaseOptions.Builder()
                         .setCredentials(credentials)
-                        .setProjectId("springboot-231810")
+                        .setProjectId("springboot-232107")
                         .build())
 
         var db = FirestoreClient.getFirestore()
 
         //add data
-//        return addData(db)
+//        init.delete()
+//
+//        return addData(api)
         // asynchronously retrieve all users
-        val query = db.collection("users").get()
+        val query = db.collection("subscription").get()
 // ...
 // query.get() blocks on response
         val querySnapshot = query.get()
@@ -57,7 +62,7 @@ class MessageController {
             temp += ("Born: " + document.getLong("born")!!)
         }
         init.delete()
-        return Message("All data: $temp")
+        return Message("FUCK: $temp")
     }
 
     private fun addData(db: Firestore): Message {
@@ -76,3 +81,4 @@ class MessageController {
     }
 
 }
+*/
