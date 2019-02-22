@@ -2,22 +2,13 @@ package com.jetbrains.demo.controller
 
 import com.google.firebase.FirebaseApp
 import com.google.firebase.cloud.FirestoreClient
-import com.jetbrains.demo.api.InitializeGCP
+import com.jetbrains.demo.dao.InitializeGCP
 import com.jetbrains.demo.bean.Subscription
 import com.jetbrains.demo.result.Result
 import com.jetbrains.demo.result.ResultStatus
 import org.springframework.web.bind.annotation.*
-import java.time.LocalTime
 import javax.servlet.http.HttpServletResponse
 import java.util.HashMap
-import com.google.api.core.ApiFuture
-import org.springframework.core.convert.TypeDescriptor.collection
-
-
-
-
-
-
 
 
 /**
@@ -29,7 +20,9 @@ import org.springframework.core.convert.TypeDescriptor.collection
 @RestController
 @RequestMapping("/subscriptions")
 class SubscriptionController {
+
     var hasBeenInitialized = false
+
     //可以直接返回
     @GetMapping
     fun getAll(): Any = subscriptions
@@ -41,16 +34,9 @@ class SubscriptionController {
     //前端直接提交JSON对象，这里可以使用RequestBody解析。提交成功后，将响应码的状态码设置为201
     @PostMapping
     fun save(@RequestBody subscription: Subscription, response: HttpServletResponse): Any {
-        // Use the application default credentials
-        val firebaseApps = FirebaseApp.getApps()
-        for (app in firebaseApps) {
-            if (app.name == FirebaseApp.DEFAULT_APP_NAME) {
-                hasBeenInitialized = true
-            }
-        }
-        if(!hasBeenInitialized) {
-            InitializeGCP()
-        }
+        //Ckeck Has Inited if has't Init GCP App
+        InitializeGCP().ckeckHasInited(hasBeenInitialized)
+
         var db = FirestoreClient.getFirestore()
         var docRef = db.collection("subscription").document(subscription.userId)
         val data = HashMap<String, Any>()
@@ -81,16 +67,9 @@ class SubscriptionController {
     //delete删除。删除成功后，将响应码的状态设置为204
     @DeleteMapping
     fun delete(@RequestBody subscription: Subscription, response: HttpServletResponse): Any {
-        // Use the application default credentials
-        val firebaseApps = FirebaseApp.getApps()
-        for (app in firebaseApps) {
-            if (app.name == FirebaseApp.DEFAULT_APP_NAME) {
-                hasBeenInitialized = true
-            }
-        }
-        if(!hasBeenInitialized) {
-            InitializeGCP()
-        }
+        //Ckeck Has Inited if has't Init GCP App
+        InitializeGCP().ckeckHasInited(hasBeenInitialized)
+
         var db = FirestoreClient.getFirestore()
         db.collection("subscription").document(subscription.userId)
                 .delete()

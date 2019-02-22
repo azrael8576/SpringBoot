@@ -1,7 +1,5 @@
 package com.jetbrains.demo.bean
 
-import java.time.LocalTime
-
 
 /**
  * Created by AlexHe on 2019-02-18.
